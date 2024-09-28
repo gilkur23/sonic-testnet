@@ -20,7 +20,7 @@ async function getToken(privateKey) {
   try {
     const keypair = getKeypair(privateKey);
     const { data } = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/auth/sonic/challenge',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/auth/sonic/challenge',
       params: { wallet: keypair.publicKey.toBase58() },
       headers: HEADERS,
     });
@@ -30,7 +30,7 @@ async function getToken(privateKey) {
     const publicKey = keypair.publicKey;
     const encodedPublicKey = Buffer.from(publicKey.toBytes()).toString('base64');
     const response = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/auth/sonic/authorize',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/auth/sonic/authorize',
       method: 'POST',
       headers: HEADERS,
       data: {
@@ -50,7 +50,7 @@ async function getToken(privateKey) {
 async function openMysteryBox(token, keypair, retries = 3) {
   try {
     const { data } = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/user/rewards/mystery-box/build-tx',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/user/rewards/mystery-box/build-tx',
       method: 'GET',
       headers: { ...HEADERS, Authorization: `Bearer ${token}` },
     });
@@ -60,7 +60,7 @@ async function openMysteryBox(token, keypair, retries = 3) {
     tx.partialSign(keypair);
     const signature = await doTransactions(tx, keypair);
     const response = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/user/rewards/mystery-box/open',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/user/rewards/mystery-box/open',
       method: 'POST',
       headers: { ...HEADERS, Authorization: `Bearer ${token}` },
       data: { hash: signature },
@@ -103,7 +103,7 @@ async function openAllBoxes(privateKey) {
 
   try {
     const { data } = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/user/rewards/info',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/user/rewards/info',
       method: 'GET',
       headers: { ...HEADERS, Authorization: `Bearer ${token}` },
     });

@@ -2,7 +2,7 @@ require('dotenv').config();
 const fs = require('fs');
 const colors = require('colors');
 const bs58 = require('bs58');
-const { sendTelegramMessage } = require('./sendTelegramMessage'); // Impor fungsi
+const { sendTelegramMessage } = require('./sendTelegramMessage');
 
 const {
   sendSol,

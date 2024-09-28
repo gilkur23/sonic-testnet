@@ -37,7 +37,7 @@ async function getToken(privateKey) {
   try {
     const keypair = getKeypair(privateKey);
     const { data } = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/auth/sonic/challenge',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/auth/sonic/challenge',
       params: { wallet: keypair.publicKey.toBase58() },
       headers: HEADERS,
     });
@@ -48,7 +48,7 @@ async function getToken(privateKey) {
     const encodedPublicKey = Buffer.from(publicKey.toBytes()).toString('base64');
 
     const response = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/auth/sonic/authorize',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/auth/sonic/authorize',
       method: 'POST',
       headers: HEADERS,
       data: {
@@ -86,7 +86,7 @@ async function doTransactions(tx, keypair, retries = 3) {
 async function dailyLogin(token, keypair) {
   try {
     const { data } = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/user/check-in/transaction',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/user/check-in/transaction',
       method: 'GET',
       headers: { ...HEADERS, Authorization: `Bearer ${token}` },
     });
@@ -97,7 +97,7 @@ async function dailyLogin(token, keypair) {
     const signature = await doTransactions(tx, keypair);
 
     const response = await axios({
-      url: 'https://odyssey-api-beta.sonic.game/user/check-in',
+      url: 'https://odyssey-api-beta.sonic.game/testnet/user/check-in',
       method: 'POST',
       headers: { ...HEADERS, Authorization: `Bearer ${token}` },
       data: { hash: signature },

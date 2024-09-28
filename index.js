@@ -19,7 +19,7 @@ const { displayHeader } = require('./src/displayUtils');
 (async () => {
   displayHeader();
 
-  const addressCount = 1;
+  const addressCount = 100;
   const amountToSend = 0.001;
   const delayBetweenTx = 1000;
 

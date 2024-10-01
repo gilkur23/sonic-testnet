@@ -10,6 +10,7 @@ const sendTelegramMessage = async (message) => {
     const response = await axios.post(url, {
       chat_id: TELEGRAM_CHAT_ID,
       text: message,
+      parse_mode: 'MarkdownV2',
     });
 
     if (response.status === 200) {

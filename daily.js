@@ -139,9 +139,12 @@ async function dailyLogin(token, keypair) {
       }
     }
 
-    const summaryMessage = `Ringkasan Login Harian:\n\nBerhasil Login:\n${successfulLogins.join('\n')}\n\nGagal Login:\n${failedLogins.join('\n')}`;
-    console.log(summaryMessage);
-    await sendTelegramMessage(summaryMessage);
+    const totalSuccessful = successfulLogins.length;
+    const totalFailed = failedLogins.length;
+
+    const summaryMessage = `*Daily Login*\nSukses: ${totalSuccessful} Akun\nGagal: ${totalFailed} Akun\n`;
+    fs.writeFileSync('summary_daily.json', JSON.stringify({ summaryMessage }));
+    console.log(summaryMessage.green);
   } catch (error) {
     console.log(`Terjadi kesalahan: ${error.message}`.red);
   } finally {

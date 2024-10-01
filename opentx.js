@@ -106,7 +106,9 @@ async function dailyClaim(token, publicKey) {
 }
 
 (async () => {
-  const results = [];
+  const successfulClaims = [];
+  const failedClaims = [];
+
   try {
     for (const privateKey of PRIVATE_KEYS) {
       try {
@@ -114,17 +116,26 @@ async function dailyClaim(token, publicKey) {
         const publicKey = keypair.publicKey.toBase58();
         const token = await getToken(privateKey);
         const claimResult = await dailyClaim(token, publicKey);
-        results.push(`Akun ${publicKey.slice(0, 6)}...: ${claimResult}`);
+
+        // Memindahkan hasil klaim ke dalam array yang sesuai
+        if (claimResult.startsWith('Berhasil')) {
+          successfulClaims.push(`Akun ${publicKey.slice(0, 6)}...: ${claimResult}`);
+        } else {
+          failedClaims.push(`Akun ${publicKey.slice(0, 6)}...: ${claimResult}`);
+        }
       } catch (keyError) {
         console.log(`Error processing key ${privateKey.slice(0, 6)}...: ${keyError.message}`.red);
-        results.push(`Akun ${privateKey.slice(0, 6)}...: Error - ${keyError.message}`);
+        failedClaims.push(`Akun ${privateKey.slice(0, 6)}...: Error - ${keyError.message}`);
       }
     }
 
-    const summaryMessage = `Ringkasan Buka box Mileston:\n${results.join('\n')}`;
-    console.log(summaryMessage);
+    const totalSuccessful = successfulClaims.length;
+    const totalFailed = failedClaims.length;
 
-    await sendTelegramMessage(summaryMessage);
+    const summaryMessage = `*Buka Tx Milestone*\nSukses: ${totalSuccessful} Akun\nGagal: ${totalFailed} Akun\n`;
+    fs.writeFileSync('summary_opentx.json', JSON.stringify({ summaryMessage }));
+    console.log(summaryMessage.green);
+
   } catch (error) {
     console.log(`Terjadi kesalahan: ${error.message}`.red);
   } finally {
